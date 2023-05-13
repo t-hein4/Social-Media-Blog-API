@@ -4,6 +4,7 @@ import Model.Account;
 import Util.ConnectionUtil;
 
 import java.sql.*;
+import java.util.*;
 
 public class AccountDAO {
     public Account insertAccount(Account account) {
@@ -27,18 +28,23 @@ public class AccountDAO {
         return null;
     }
 
-    public Account selectAccount(String username) {
+    public Account selectAccount(String username, String password) {
         Connection connection = ConnectionUtil.getConnection();
-        Account account = null;
 
         try {
-            String sql = "SELECT * FROM account WHERE username = ?;";
+            String sql = "SELECT * FROM account WHERE username = ?";
+            if (password != null) {
+                sql += " AND password = ?;";
+            }
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                account = new Account(resultSet.getString("username"),
+            if (resultSet.next()) {
+                return new Account(
+                        resultSet.getInt("account_id"),
+                        resultSet.getString("username"),
                         resultSet.getString("password")
                 );
             }
@@ -46,6 +52,10 @@ public class AccountDAO {
             System.out.println(e.getMessage());
         }
 
-        return account;
+        return null;
+    }
+
+    public Account selectAccount(String username) {
+        return selectAccount(username, null);
     }
 }

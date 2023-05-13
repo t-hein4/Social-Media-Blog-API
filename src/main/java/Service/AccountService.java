@@ -3,8 +3,6 @@ package Service;
 import DAO.AccountDAO;
 import Model.Account;
 
-import java.util.List;
-
 public class AccountService {
     private final AccountDAO accountDAO;
 
@@ -16,8 +14,12 @@ public class AccountService {
         this.accountDAO = accountDAO;
     }
 
-    private Account findAccount(String username) {
+    public Account findAccount(String username) {
         return accountDAO.selectAccount(username);
+    }
+
+    public Account findAccount(String username, String password) {
+        return accountDAO.selectAccount(username, password);
     }
 
     public Account addAccount(Account account) {
