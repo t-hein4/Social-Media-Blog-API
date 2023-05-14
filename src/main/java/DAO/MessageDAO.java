@@ -103,7 +103,7 @@ public class MessageDAO {
 
     public Message deleteMessage(int messageId) {
         Connection connection = ConnectionUtil.getConnection();
-        Message messageToDelete = selectMessageById(messageId);
+        Message deleted = selectMessageById(messageId);
         try {
             String sql = "DELETE FROM message WHERE message_id = ?;";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -113,23 +113,23 @@ public class MessageDAO {
             System.out.println(e.getMessage());
         }
 
-        return messageToDelete;
+        return deleted;
     }
 
     public Message updateMessage(int messageId, String messageText) {
         Connection connection = ConnectionUtil.getConnection();
-        Message message = null;
+        Message updated = null;
         try {
             String sql = "UPDATE message SET message_text = ? WHERE message_id = ?;";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, messageText);
             preparedStatement.setInt(2, messageId);
             preparedStatement.execute();
-            message = selectMessageById(messageId);
+            updated = selectMessageById(messageId);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 
-        return message;
+        return updated;
     }
 }

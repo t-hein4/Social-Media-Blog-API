@@ -4,7 +4,6 @@ import Model.Account;
 import Util.ConnectionUtil;
 
 import java.sql.*;
-import java.util.*;
 
 public class AccountDAO {
     public Account insertAccount(Account account) {
@@ -52,7 +51,7 @@ public class AccountDAO {
         return null;
     }
 
-    public Account selectAccountById(int accountId) {
+    public Account selectAccount(int accountId) {
         Connection connection = ConnectionUtil.getConnection();
 
         try {
