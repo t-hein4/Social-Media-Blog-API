@@ -37,7 +37,11 @@ public class SocialMediaController {
         app.post("/register", this::register);
         app.post("/login", this::login);
         app.post("/messages", this::createMessage);
-        app.get("/accounts/{id}/messages", this::getAllMessages);
+        app.get("/messages", this::getAllMessages);
+        app.get("/accounts/{id}/messages", this::getAllMessagesForAccount);
+        app.get("/messages/{message_id}", this::getMessageById);
+        app.delete("/messages/{message_id}", this::deleteMessage);
+        app.patch("/messages/{message_id}", this::updateMessage);
 
         return app;
     }
@@ -84,9 +88,43 @@ public class SocialMediaController {
         }
     }
 
-    private void getAllMessages(Context context) {
-        int id = Integer.parseInt(context.pathParam("id"));
-        List<Message> messages = messageService.getAllMessages(id);
+    private void getAllMessagesForAccount(Context context) {
+        int accountId = Integer.parseInt(context.pathParam("id"));
+        List<Message> messages = messageService.getAllMessagesForAccount(accountId);
         context.json(messages);
+    }
+
+    private void getAllMessages(Context context) {
+        List<Message> messages = messageService.getAllMessages();
+        context.json(messages);
+    }
+
+    private void getMessageById(Context context) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        int messageId = Integer.parseInt(context.pathParam("message_id"));
+        Message message = messageService.getMessageById(messageId);
+        if (message != null) {
+            context.json(mapper.writeValueAsString(message));
+        }
+    }
+
+    private void deleteMessage(Context context) {
+        int messageId = Integer.parseInt(context.pathParam("message_id"));
+        Message message = messageService.deleteMessage(messageId);
+        if (message != null) {
+            context.json(message);
+        }
+    }
+
+    private void updateMessage(Context context) throws JsonProcessingException {
+        int messageId = Integer.parseInt(context.pathParam("message_id"));
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(context.body(), Message.class);
+        Message updated = messageService.updateMessage(messageId, message);
+        if (updated != null) {
+            context.json(mapper.writeValueAsString(updated));
+        } else {
+            context.status(400);
+        }
     }
 }
