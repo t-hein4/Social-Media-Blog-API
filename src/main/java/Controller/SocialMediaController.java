@@ -1,7 +1,9 @@
 package Controller;
 
 import Model.Account;
+import Model.Message;
 import Service.AccountService;
+import Service.MessageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
@@ -14,9 +16,11 @@ import io.javalin.http.Context;
  */
 public class SocialMediaController {
     AccountService accountService;
+    MessageService messageService;
 
     public SocialMediaController() {
         this.accountService = new AccountService();
+        this.messageService = new MessageService();
     }
 
     /**
@@ -28,8 +32,9 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
 
         app.get("example-endpoint", this::exampleHandler);
-        app.post("register", this::register);
-        app.post("login", this::login);
+        app.post("/register", this::register);
+        app.post("/login", this::login);
+        app.post("/messages", this::createMessage);
 
         return app;
     }
@@ -56,11 +61,23 @@ public class SocialMediaController {
     private void login(Context context) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(context.body(), Account.class);
-        Account found = accountService.findAccount(account.getUsername(), account.getPassword());
-        if (found != null) {
+        Account found = accountService.findAccount(account.getUsername());
+        if (found != null && found.getPassword().equals(account.getPassword())) {
             context.json(mapper.writeValueAsString(found));
         } else {
             context.status(401);
+        }
+    }
+
+    private void createMessage(Context context) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(context.body(), Message.class);
+        Account account = accountService.findAccountById(message.getPosted_by());
+        Message created = account != null ? messageService.createMessage(message) : null;
+        if (created != null) {
+            context.json(mapper.writeValueAsString(created));
+        } else {
+            context.status(400);
         }
     }
 }
