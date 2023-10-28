@@ -64,7 +64,13 @@ User can submit a GET request on the endpoint GET localhost:8080/accounts/{accou
 
 ## List of Technologies used
 
-- 
+- JDBC
+- Java
+- SQL
+- Javalin
+- Junit
+- Mockito
+
 # Further guidance
 
 Some classes are already complete and SHOULD NOT BE CHANGED - Integration tests, Model classes for Account and Message, a ConnectionUtil class. Changing any of these classes will likely result in the test cases being impossible to pass.
@@ -75,6 +81,3 @@ You SHOULD be changing the SocialMediaController class to add endpoints to the S
 
 You SHOULD be creating and designing DAO and Service class to allow you to complete the project. In theory, you could design the project however you like, so long as the functionality works and you are somehow persisting data to the database - but a 3-layer architecture is a robust design pattern and following help you in the long run. You can refer to prior mini-projects and course material for help on designing your application in this way.
 
-# Good luck!
-
-ted balashov
