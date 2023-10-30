@@ -239,7 +239,9 @@ User can submit a GET request on the endpoint GET localhost:8080/accounts/{accou
 ## Getting started
 
 - Clone the project by copying and pasting the following command in the terminal.
-  `git@github.com:t-hein4/Social-Media-Blog-API.git`
+  ```shell
+    git@github.com:t-hein4/Social-Media-Blog-API.git
+  ```
 - Open it in any IDE such as IntelliJ IDEA or Visual Studio Code.
 - Start the server by running the 'Main.java' file. (location: src/main/java/)
 - You can start calling the APIs from the terminal.
